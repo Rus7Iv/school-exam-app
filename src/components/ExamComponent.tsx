@@ -9,9 +9,14 @@ import SingleChoice from './questions/SingleChoice'
 const ExamComponent: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [answers, setAnswers] = useState<{ [key: number]: any }>({})
+  const [completed, setCompleted] = useState(false)
 
   const handleNext = () => {
-    setActiveStep((prev) => prev + 1)
+    if (activeStep === questions.length - 1) {
+      setCompleted(true)
+    } else {
+      setActiveStep((prev) => prev + 1)
+    }
   }
 
   const handleBack = () => {
@@ -58,29 +63,58 @@ const ExamComponent: React.FC = () => {
     }
   }
 
+  const checkAnswers = () => {
+    let score = 0
+    questions.forEach((question, index) => {
+      const userAnswer = answers[index]
+      if (question.type === 'single' && userAnswer === question.correct) {
+        score += 1
+      } else if (question.type === 'multiple' && Array.isArray(userAnswer)) {
+        const correctAnswers = question.correct as number[]
+        if (
+          correctAnswers.length === userAnswer.length &&
+          correctAnswers.every((val, i) => val === userAnswer[i])
+        ) {
+          score += 1
+        }
+      } else if (question.type === 'short' && userAnswer === question.correct) {
+        score += 1
+      }
+    })
+    return score
+  }
+
+  if (completed) {
+    const score = checkAnswers()
+    return (
+      <div>
+        <h2>
+          Ваш результат: {score} из {questions.length}
+        </h2>
+        <button onClick={() => setCompleted(false)}>Начать заново</button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <Stepper activeStep={activeStep}>
         {questions.map((_, index) => (
           <Step key={index}>
-            <StepLabel>{`Question ${index + 1}`}</StepLabel>
+            <StepLabel>{`Вопрос ${index + 1}`}</StepLabel>
           </Step>
         ))}
       </Stepper>
       {getStepContent(activeStep)}
       <div>
         <button disabled={activeStep === 0} onClick={handleBack}>
-          Back
+          Назад
         </button>
-        <button
-          disabled={activeStep === questions.length - 1}
-          onClick={handleNext}
-        >
-          Next
+        <button onClick={handleNext}>
+          {activeStep === questions.length - 1 ? 'Завершить' : 'Далее'}
         </button>
       </div>
     </div>
   )
 }
-
 export default ExamComponent

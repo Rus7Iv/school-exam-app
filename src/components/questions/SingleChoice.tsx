@@ -1,21 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { SingleChoiceQuestion } from '../../types/types'
 
-const SingleChoice: React.FC<{ question: any; onAnswer: (a: any) => void }> = ({
-  question,
-  onAnswer,
-}) => {
+interface SingleChoiceProps {
+  question: SingleChoiceQuestion
+  onAnswer: (answer: number) => void
+}
+
+const SingleChoice: React.FC<SingleChoiceProps> = ({ question, onAnswer }) => {
+  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10)
+    setSelectedOption(value)
+    onAnswer(value)
+  }
+
   return (
     <div>
-      <p>{question.question}</p>
-      {question.options.map((option: string, index: number) => (
+      <h3>{question.question}</h3>
+      {question.options.map((option, index) => (
         <div key={index}>
           <input
             type="radio"
-            name="singleChoice"
-            onChange={() => onAnswer(option)}
-            value={option}
+            id={`single-choice-${index}`}
+            name="single-choice"
+            value={index}
+            checked={selectedOption === index}
+            onChange={handleChange}
           />
-          {option}
+          <label htmlFor={`single-choice-${index}`}>{option}</label>
         </div>
       ))}
     </div>

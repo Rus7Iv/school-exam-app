@@ -1,13 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { LongAnswerQuestion } from '../../types/types'
 
-const LongAnswer: React.FC<{ question: any; onAnswer: (a: any) => void }> = ({
-  question,
-  onAnswer,
-}) => {
+interface LongAnswerProps {
+  question: LongAnswerQuestion
+  onAnswer: (answer: string) => void
+}
+
+const LongAnswer: React.FC<LongAnswerProps> = ({ question, onAnswer }) => {
+  const [answer, setAnswer] = useState('')
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setAnswer(event.target.value)
+    onAnswer(event.target.value)
+  }
+
   return (
     <div>
-      <p>{question.question}</p>
-      <textarea onChange={(e) => onAnswer(e.target.value)} />
+      <h3>{question.question}</h3>
+      <textarea value={answer} onChange={handleChange} />
     </div>
   )
 }

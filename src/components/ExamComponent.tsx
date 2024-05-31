@@ -1,6 +1,9 @@
-import { Stepper, Step, StepLabel } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { questions } from '../mocks/questions'
+import ExamControls from './ExamControls'
+import ExamResult from './ExamResult'
+import ExamStepper from './ExamStepper'
 import Timer from './Timer'
 import LongAnswer from './questions/LongAnswer'
 import MultipleChoice from './questions/MultipleChoice'
@@ -8,19 +11,12 @@ import ShortAnswer from './questions/ShortAnswer'
 import SingleChoice from './questions/SingleChoice'
 
 const ExamComponent: React.FC = () => {
-  const [activeStep, setActiveStep] = useState(
-    localStorage.getItem('activeStep')
-      ? Number(localStorage.getItem('activeStep'))
-      : 0,
+  const [activeStep, setActiveStep] = useLocalStorage<number>('activeStep', 0)
+  const [answers, setAnswers] = useLocalStorage<Record<number, any>>(
+    'answers',
+    {},
   )
-  const [answers, setAnswers] = useState(
-    localStorage.getItem('answers')
-      ? JSON.parse(localStorage.getItem('answers') as string)
-      : {},
-  )
-  const [completed, setCompleted] = useState(
-    localStorage.getItem('completed') === 'true',
-  )
+  const [completed, setCompleted] = useLocalStorage<boolean>('completed', false)
 
   const handleTimeUp = () => {
     setCompleted(true)
@@ -125,33 +121,24 @@ const ExamComponent: React.FC = () => {
   if (completed) {
     const score = checkAnswers()
     return (
-      <div>
-        <h2>
-          Ваш результат: {score} из {questions.length}
-        </h2>
-        <button onClick={resetTest}>Начать заново</button>
-      </div>
+      <ExamResult
+        score={score}
+        questionsLength={questions.length}
+        resetTest={resetTest}
+      />
     )
   }
 
   return (
     <div>
-      <Stepper activeStep={activeStep}>
-        {questions.map((_, index) => (
-          <Step key={index}>
-            <StepLabel>{`Вопрос ${index + 1}`}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+      <ExamStepper activeStep={activeStep} />
       {getStepContent(activeStep)}
-      <div>
-        <button disabled={activeStep === 0} onClick={handleBack}>
-          Назад
-        </button>
-        <button onClick={handleNext}>
-          {activeStep === questions.length - 1 ? 'Завершить' : 'Далее'}
-        </button>
-      </div>
+      <ExamControls
+        activeStep={activeStep}
+        handleBack={handleBack}
+        handleNext={handleNext}
+        questionsLength={questions.length}
+      />
       <Timer onTimeUp={handleTimeUp} duration={20 * 60 * 1000} />
     </div>
   )

@@ -40,11 +40,14 @@ const ExamComponent: React.FC = () => {
 
   const getStepContent = (step: number) => {
     const question = questions[step]
+    const answer = answers[step]
+
     switch (question.type) {
       case 'single':
         return (
           <SingleChoice
             question={question}
+            answer={answer}
             onAnswer={(a) => handleAnswer(step, a)}
           />
         )
@@ -52,6 +55,7 @@ const ExamComponent: React.FC = () => {
         return (
           <MultipleChoice
             question={question}
+            answer={answer}
             onAnswer={(a) => handleAnswer(step, a)}
           />
         )
@@ -59,6 +63,7 @@ const ExamComponent: React.FC = () => {
         return (
           <ShortAnswer
             question={question}
+            answer={answer}
             onAnswer={(a) => handleAnswer(step, a)}
           />
         )
@@ -66,6 +71,7 @@ const ExamComponent: React.FC = () => {
         return (
           <LongAnswer
             question={question}
+            answer={answer}
             onAnswer={(a) => handleAnswer(step, a)}
           />
         )
@@ -95,6 +101,12 @@ const ExamComponent: React.FC = () => {
     return score
   }
 
+  const resetTest = () => {
+    setActiveStep(0)
+    setAnswers({})
+    setCompleted(false)
+  }
+
   if (completed) {
     const score = checkAnswers()
     return (
@@ -102,7 +114,7 @@ const ExamComponent: React.FC = () => {
         <h2>
           Ваш результат: {score} из {questions.length}
         </h2>
-        <button onClick={() => setCompleted(false)}>Начать заново</button>
+        <button onClick={resetTest}>Начать заново</button>
       </div>
     )
   }
@@ -129,4 +141,5 @@ const ExamComponent: React.FC = () => {
     </div>
   )
 }
+
 export default ExamComponent

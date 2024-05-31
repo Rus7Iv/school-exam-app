@@ -1,13 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SingleChoiceQuestion } from '../../types/types'
 
 interface SingleChoiceProps {
   question: SingleChoiceQuestion
+  answer: number | null
   onAnswer: (answer: number) => void
 }
 
-const SingleChoice: React.FC<SingleChoiceProps> = ({ question, onAnswer }) => {
-  const [selectedOption, setSelectedOption] = useState<number | null>(null)
+const SingleChoice: React.FC<SingleChoiceProps> = ({
+  question,
+  answer = null,
+  onAnswer,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<number | null>(answer)
+
+  useEffect(() => {
+    setSelectedOption(answer)
+  }, [answer])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10)

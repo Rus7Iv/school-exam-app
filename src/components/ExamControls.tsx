@@ -6,7 +6,7 @@ const ExamControls: React.FC<{
   handleNext: () => void
   questionsLength: number
 }> = ({ activeStep, handleBack, handleNext, questionsLength }) => (
-  <div>
+  <div className="button-group">
     <button disabled={activeStep === 0} onClick={handleBack}>
       Назад
     </button>

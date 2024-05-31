@@ -85,8 +85,9 @@ const ExamComponent: React.FC = () => {
   }
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <ExamStepper activeStep={activeStep} />
+      <Timer onTimeUp={handleTimeUp} duration={20 * 60 * 1000} />
       <StepContent
         step={activeStep}
         question={questions[activeStep]}
@@ -99,7 +100,6 @@ const ExamComponent: React.FC = () => {
         handleNext={handleNext}
         questionsLength={questions.length}
       />
-      <Timer onTimeUp={handleTimeUp} duration={20 * 60 * 1000} />
     </div>
   )
 }

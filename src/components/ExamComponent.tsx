@@ -8,19 +8,33 @@ import ShortAnswer from './questions/ShortAnswer'
 import SingleChoice from './questions/SingleChoice'
 
 const ExamComponent: React.FC = () => {
-  const [activeStep, setActiveStep] = useState(0)
-  const [answers, setAnswers] = useState<{ [key: number]: any }>({})
-  const [completed, setCompleted] = useState(false)
+  const [activeStep, setActiveStep] = useState(
+    localStorage.getItem('activeStep')
+      ? Number(localStorage.getItem('activeStep'))
+      : 0,
+  )
+  const [answers, setAnswers] = useState(
+    localStorage.getItem('answers')
+      ? JSON.parse(localStorage.getItem('answers') as string)
+      : {},
+  )
+  const [completed, setCompleted] = useState(
+    localStorage.getItem('completed') === 'true',
+  )
 
   const handleTimeUp = () => {
     setCompleted(true)
   }
 
   useEffect(() => {
+    localStorage.setItem('activeStep', String(activeStep))
+    localStorage.setItem('answers', JSON.stringify(answers))
+    localStorage.setItem('completed', String(completed))
+
     if (completed) {
       localStorage.removeItem('testStart')
     }
-  }, [completed])
+  }, [activeStep, answers, completed])
 
   const handleNext = () => {
     if (activeStep === questions.length - 1) {
@@ -105,6 +119,7 @@ const ExamComponent: React.FC = () => {
     setActiveStep(0)
     setAnswers({})
     setCompleted(false)
+    localStorage.clear()
   }
 
   if (completed) {

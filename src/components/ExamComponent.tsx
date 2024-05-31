@@ -1,6 +1,7 @@
 import { Stepper, Step, StepLabel } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { questions } from '../mocks/questions'
+import Timer from './Timer'
 import LongAnswer from './questions/LongAnswer'
 import MultipleChoice from './questions/MultipleChoice'
 import ShortAnswer from './questions/ShortAnswer'
@@ -10,6 +11,16 @@ const ExamComponent: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0)
   const [answers, setAnswers] = useState<{ [key: number]: any }>({})
   const [completed, setCompleted] = useState(false)
+
+  const handleTimeUp = () => {
+    setCompleted(true)
+  }
+
+  useEffect(() => {
+    if (completed) {
+      localStorage.removeItem('testStart')
+    }
+  }, [completed])
 
   const handleNext = () => {
     if (activeStep === questions.length - 1) {
@@ -114,6 +125,7 @@ const ExamComponent: React.FC = () => {
           {activeStep === questions.length - 1 ? 'Завершить' : 'Далее'}
         </button>
       </div>
+      <Timer onTimeUp={handleTimeUp} duration={20 * 60 * 1000} />
     </div>
   )
 }

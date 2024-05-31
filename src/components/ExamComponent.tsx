@@ -4,11 +4,8 @@ import { questions } from '../mocks/questions'
 import ExamControls from './ExamControls'
 import ExamResult from './ExamResult'
 import ExamStepper from './ExamStepper'
+import StepContent from './StepContent'
 import Timer from './Timer'
-import LongAnswer from './questions/LongAnswer'
-import MultipleChoice from './questions/MultipleChoice'
-import ShortAnswer from './questions/ShortAnswer'
-import SingleChoice from './questions/SingleChoice'
 
 const ExamComponent: React.FC = () => {
   const [activeStep, setActiveStep] = useLocalStorage<number>('activeStep', 0)
@@ -46,48 +43,6 @@ const ExamComponent: React.FC = () => {
 
   const handleAnswer = (questionIndex: number, answer: any) => {
     setAnswers({ ...answers, [questionIndex]: answer })
-  }
-
-  const getStepContent = (step: number) => {
-    const question = questions[step]
-    const answer = answers[step]
-
-    switch (question.type) {
-      case 'single':
-        return (
-          <SingleChoice
-            question={question}
-            answer={answer}
-            onAnswer={(a) => handleAnswer(step, a)}
-          />
-        )
-      case 'multiple':
-        return (
-          <MultipleChoice
-            question={question}
-            answer={answer}
-            onAnswer={(a) => handleAnswer(step, a)}
-          />
-        )
-      case 'short':
-        return (
-          <ShortAnswer
-            question={question}
-            answer={answer}
-            onAnswer={(a) => handleAnswer(step, a)}
-          />
-        )
-      case 'long':
-        return (
-          <LongAnswer
-            question={question}
-            answer={answer}
-            onAnswer={(a) => handleAnswer(step, a)}
-          />
-        )
-      default:
-        return 'Unknown question type'
-    }
   }
 
   const checkAnswers = () => {
@@ -132,7 +87,12 @@ const ExamComponent: React.FC = () => {
   return (
     <div>
       <ExamStepper activeStep={activeStep} />
-      {getStepContent(activeStep)}
+      <StepContent
+        step={activeStep}
+        question={questions[activeStep]}
+        answer={answers[activeStep]}
+        onAnswer={(a) => handleAnswer(activeStep, a)}
+      />
       <ExamControls
         activeStep={activeStep}
         handleBack={handleBack}

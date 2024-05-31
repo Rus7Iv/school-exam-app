@@ -1,30 +1,50 @@
-# React + TypeScript + Vite
+# School Exam App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание
 
-Currently, two official plugins are available:
+Веб-приложение, разработанное для упрощения процесса проведения экзаменов в учебных заведениях. Приложение предоставляет возможность создавать экзаменационные тесты, а также проходить их онлайн.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Стек технологий:
 
-## Expanding the ESLint configuration
+ - React
+ - Typescript
+ - Redux
+ - Material-UI
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Задача
 
-- Configure the top-level `parserOptions` property like this:
+В школе проводятся промежуточные аттестации учащихся в формате теста. Необходимо реализовать клиентскую часть приложения для проведения тестирования.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
+💡 Тест на этапе MVP должен представлять из себя стандартные тесты:
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+ - варианты ответа
+
+ - выбор одного варианта
+
+ - выбор нескольких вариантов
+
+ - короткий ответ
+
+ - развернутый ответ
+
+Также тест может иметь ограничение по времени выполнения.
+
+При перезагрузке страницы необходимо сохранять прогресс выполнения теста.
+
+## Пример работы
+
+### Стратовая страница
+![alt text](/public/image.png)
+
+### Тестирование
+
+![alt text](/public/image-1.png)
+
+### Результат
+
+![alt text](/public/image-2.png)
+
+
+### Адаптив
+
+![alt text](/public/image-3.png)

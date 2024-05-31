@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { CountdownProgress } from './LinearProgress'
 
 interface ITimerProps {
   onTimeUp: () => void
@@ -28,12 +29,13 @@ const Timer = ({ onTimeUp, duration = 60 * 1000 }: ITimerProps) => {
     return () => clearInterval(timerId)
   }, [timeLeft, onTimeUp, getRemainingTime])
 
-  const minutes = Math.floor(timeLeft / 60000)
-  const seconds = Number(((timeLeft % 60000) / 1000).toFixed(0))
+  const progress = ((duration - timeLeft) / duration) * 100
 
+  const seconds = Number(((timeLeft % 60000) / 1000).toFixed(0))
   return (
     <div>
-      Оставшееся время: {minutes}:{seconds < 10 ? '0' : ''}
+      <CountdownProgress value={progress} />
+      Оставшееся время: {Math.floor(timeLeft / 60000)}:{seconds < 10 ? '0' : ''}
       {seconds}
     </div>
   )
